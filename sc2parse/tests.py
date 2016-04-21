@@ -541,6 +541,10 @@ class SC2ReaderToEsdbTestCase(unittest.TestCase):
       minuteDB = minuteDBs[0]
       self.assertEquals(minuteDB.creep_spread, 31.62)
 
+    def test_lotv_army_minutes(self):
+        replay = self.get_parsed_replay(33)
+        abm = replay.players[1].army_by_minute
+        self.assertEquals(len(abm), 11)
 
     # take dont_ away from the following function name to do a
     # 3-replay speed benchmark

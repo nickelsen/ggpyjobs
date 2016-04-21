@@ -541,8 +541,12 @@ def ArmyTracker(replay):
         Requires: OwnershipTracker, LifeSpanTracker
     """
 
+    speed_multiplier = 1
+    if replay.expansion == 'LotV':
+        speed_multiplier = 1.4
+
     # Chop off trailing seconds since we use floor below
-    replayMinutesCompleted = replay.frames/960
+    replayMinutesCompleted = int(replay.frames/960/speed_multiplier)
     for player in replay.players:
         player.total_army = [0] * MAX_NUM_UNITS
         player.army_by_minute = list()
@@ -572,8 +576,8 @@ def ArmyTracker(replay):
                 unit.died_at = replay.frames
 
             # This understates the army strength by rounding birth up and death down
-            firstMinuteInArmy = int(math.ceil(unit.finished_at/960.0))
-            lastMinuteInArmy = unit.died_at/960
+            firstMinuteInArmy = int(math.ceil(unit.finished_at/960.0/speed_multiplier))
+            lastMinuteInArmy = int(unit.died_at/960/speed_multiplier)
 
             # Mark the unit strength for the whole time range
             for i in range(firstMinuteInArmy, lastMinuteInArmy+1):
